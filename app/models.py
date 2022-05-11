@@ -1,4 +1,5 @@
 from . import db,login_manager
+from datetime import datetime
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash,check_password_hash
 
@@ -8,7 +9,10 @@ class User(db.Model,UserMixin):
     username = db.Column(db.String(255),unique = True,nullable = False)
     email  = db.Column(db.String(255),unique = True,nullable = False)
     secure_password = db.Column(db.String(255),nullable = False)
-
+    bio = db.Column(db.String(255))
+    profile_pic_path = db.Column(db.String())
+    pitches = db.relationship('Pitch', backref='user', lazy='dynamic')
+    comment = db.relationship('Comment', backref='user', lazy='dynamic')
 
     @property
     def set_password(self):
@@ -22,7 +26,7 @@ class User(db.Model,UserMixin):
         return check_password_hash(self.secure_password,password) 
 
     
-    def save(self):
+    def save_u(self):
         db.session.add(self)
         db.session.commit()
 
@@ -30,9 +34,43 @@ class User(db.Model,UserMixin):
         db.session.delete(self)
         db.session.commit()
 
-    
     def __repr__(self):
         return f'User {self.username}' 
+
+class Pitch(db.Model):
+    __tablename__ = 'pitches'
+    id = db.Column(db.Integer, primary_key = True)
+    title = db.Column(db.String(255))
+    post = db.Column(db.Text())
+    comment = db.relationship('Comment',backref='pitch',lazy='dynamic')
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    time = db.Column(db.DateTime, default = datetime.utcnow)
+    category = db.Column(db.String(255), index = True)
+
+    def save_p(self):
+        db.session.add(self)
+        db.session.commit()
+
+
+    def __repr__(self):
+        return f'Pitch {self.post}'
+
+class Comment(db.Model):
+    __tablename__ = 'comments'
+    id = db.Column(db.Integer, primary_key=True)
+    comment = db.Column(db.Text())
+    user_id = db.Column(db.Integer,db.ForeignKey('users.id'))
+    pitch_id = db.Column(db.Integer,db.ForeignKey('pitches.id'))
+
+    def save_p(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def __repr__(self):
+        return f'comment:{self.comment}'
+
+
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
