@@ -7,7 +7,7 @@ import os
 
 class Config:
     # SQLALCHEMY_DATABASE_URI = os.environ.get('SQLALCHEMY_DATABASE_URI')
-    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://davy:154dimaria@localhost/site'
+    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://davy:password@localhost/site'
     # print(SQLALCHEMY_DATABASE_URI)
     SQLALCHEMY_TRACK_MODIFICATIONS=True
     SECRET_KEY=os.environ.get('SECRET_KEY')
