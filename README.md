@@ -1,4 +1,4 @@
-# pitch-world
+# pitch-site
 ## Author
 
 [David Njagi](https://github.com/poldiee)
@@ -10,7 +10,7 @@ a flask application that allows users to post one minute pitches and also allows
 
 ## Screenshot
 
-<img src="" width="700px" height="300px">
+<img src="app/static/photos/scrn.jpg" width="700px" height="300px">
 
 ## User Story
 
